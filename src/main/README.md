@@ -19,13 +19,6 @@ What the program does
    - students.bin
 5. Reads the binary file again
 
-How to compile
---------------
-javac *.java
-
-How to run
-----------
-java StudentDemo
 
 Expected input format
 ---------------------
