@@ -26,7 +26,7 @@ public class StudentFileHandler {
                     continue;
                 }
 
-                String[] parts = line.split(",", 2);
+                String[] parts = line.split(",");
                 if (parts.length != 2) {
                     throw new IOException("Invalid CSV format at line " + lineNumber + ": " + line);
                 }
