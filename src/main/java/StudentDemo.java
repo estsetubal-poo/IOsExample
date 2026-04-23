@@ -1,8 +1,9 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class StudentDemo {
 
-    private final static String studentFileCSV= "students_example.csv";
+    private final static String studentFileCSV= "src/main/students_example1.csv";
     private final static String studentPautaTxt="students_pauta.txt";
     private final static String studentPautaBin="students_pauta.bin";
     private StudentList list;
@@ -58,7 +59,7 @@ public class StudentDemo {
             System.out.println("- students_pauta.bin");
 
             System.out.println("- students_pauta.txt");
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }

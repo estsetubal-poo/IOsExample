@@ -12,7 +12,11 @@ public class StudentFileHandler {
     }
 
     public void addStudentsFromFile(String filename) throws IOException {
-
+        /**
+          Não estamos a usar o classico BufferedReader reader = new BufferedReader(new FileReader(filename))
+          e usamos InputStream porque o ficheiro está dentro do projeto (resources)
+         e não num ficheiro normal do disco.”
+         **/
         try ( InputStream is = getClass().getClassLoader().getResourceAsStream(filename); ){
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
@@ -53,13 +57,15 @@ public class StudentFileHandler {
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             writer.println("Data da pauta: " + LocalDate.now());
-            writer.println("Número | Nome | Nota");
-            for (Student student : list.getStudents()) {
-                String gradeText = student.hasGrade() ? String.valueOf(student.getGrade()) : "N/A";
-                writer.println(
-                    student.getNumber() + " | " +
-                    student.getName() + " | " +
-                    gradeText
+            writer.printf("%-10s | %-20s | %-5s%n", "Número", "Nome", "Nota");
+
+            for (Student s : list.getStudents()) {
+                String gradeText = s.hasGrade() ? String.valueOf(s.getGrade()) : "N/A";
+
+                writer.printf("%-10d | %-20s | %-5s%n",
+                        s.getNumber(),
+                        s.getName(),
+                        gradeText
                 );
             }
 
@@ -95,12 +101,12 @@ public class StudentFileHandler {
                  new ObjectOutputStream(new FileOutputStream(filename))) {
             output.writeObject(list);
         } catch (NotSerializableException e) {
-            throw new IOException("A class in the object graph is not serializable.", e);
+            throw new IOException("A class in the object  is not serializable.", e);
         }
     }
 
     public static StudentList readFromBinaryFile(String filename)
-            throws IOException, ClassNotFoundException {
+            throws IOException {
 
         StudentList list;
 
@@ -108,8 +114,12 @@ public class StudentFileHandler {
                      new ObjectInputStream(new FileInputStream(filename))) {
 
             list = (StudentList) input.readObject();
+        }catch (ClassCastException e) {
+            throw new IOException(e.getMessage());
         }
-
+     catch (ClassNotFoundException e) {
+        throw new IOException(e.getMessage());
+    }
         return list;
     }
 
