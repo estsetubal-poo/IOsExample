@@ -11,7 +11,7 @@ public class Student implements Serializable {
         if (number <= 0) {
             throw new IllegalArgumentException("Student number must be greater than 0.");
         }
-        if (name == null || name.isBlank()) {
+        if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Student name cannot be null or blank.");
         }
 

@@ -1,13 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.time.LocalDate;
 
 public class StudentFileHandler {
@@ -21,14 +12,17 @@ public class StudentFileHandler {
     }
 
     public void addStudentsFromFile(String filename) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+
+        try ( InputStream is = getClass().getClassLoader().getResourceAsStream(filename); ){
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
             String line;
             int lineNumber = 0;
 
             while ((line = reader.readLine()) != null) {
                 lineNumber++;
 
-                if (line.isBlank()) {
+                if (line.isEmpty()) {
                     continue;
                 }
 
@@ -55,10 +49,11 @@ public class StudentFileHandler {
     }
 
     public void saveGradeReportTxt(String filename) throws IOException {
+
+
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             writer.println("Data da pauta: " + LocalDate.now());
             writer.println("Número | Nome | Nota");
-
             for (Student student : list.getStudents()) {
                 String gradeText = student.hasGrade() ? String.valueOf(student.getGrade()) : "N/A";
                 writer.println(
@@ -95,6 +90,7 @@ public class StudentFileHandler {
     }
 
     public void saveToBinaryFile(String filename) throws IOException {
+
         try (ObjectOutputStream output =
                  new ObjectOutputStream(new FileOutputStream(filename))) {
             output.writeObject(list);
@@ -105,9 +101,17 @@ public class StudentFileHandler {
 
     public static StudentList readFromBinaryFile(String filename)
             throws IOException, ClassNotFoundException {
+
+        StudentList list;
+
         try (ObjectInputStream input =
-                 new ObjectInputStream(new FileInputStream(filename))) {
-            return (StudentList) input.readObject();
+                     new ObjectInputStream(new FileInputStream(filename))) {
+
+            list = (StudentList) input.readObject();
         }
+
+        return list;
     }
-}
+
+
+   }
